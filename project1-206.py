@@ -10,14 +10,35 @@ def getData(file):
 #Ouput: return a list of dictionary objects where
 #the keys are from the first row in the data. and the values are each of the other rows
 
-	pass
+	inFile = open(file, 'r')
+	list = []
+	readlines = inFile.readlines()
+
+
+	temp1 = readlines[0]
+	temp2 = temp1.rstrip()
+	header = temp2.split(',')
+	for object in readlines[1:]:
+		i = 0
+		dict_object = {}
+		split_object = object.split(",")
+		for x in split_object:
+			dict_object[header[i]] = x
+			i += 1
+		list.append(dict_object)
+	inFile.close()
+	return list
+
 
 def mySort(data,col):
 # Sort based on key/column
 #Input: list of dictionaries and col (key) to sort on
 #Output: Return the first item in the sorted list as a string of just: firstName lastName
 
-	pass
+	sort_dict = sorted(data, key = lambda x: x[col])
+	first_name = str(sort_dict[0]['First'])
+	last_name = str(sort_dict[0]['Last'])
+	return '{} {}'.format(first_name, last_name)
 
 
 def classSizes(data):
@@ -27,7 +48,14 @@ def classSizes(data):
 # descending order
 # [('Senior', 26), ('Junior', 25), ('Freshman', 21), ('Sophomore', 18)]
 
-	pass
+	class_dict = {}
+	for object in data:
+		if object["Class"] in class_dict:
+			class_dict[object["Class"]] += 1
+		else:
+			class_dict[object["Class"]] = 1
+
+	return sorted(class_dict.items(), key = lambda x: x[1], reverse=True)
 
 
 def findMonth(a):
@@ -35,7 +63,14 @@ def findMonth(a):
 # Input: list of dictionaries
 # Output: Return the month (1-12) that had the most births in the data
 
-	pass
+	month_dict = {}
+	for object in a:
+		birth_month = object["DOB"].split('/')[0]
+		if birth_month in month_dict:
+			month_dict[birth_month] += 1
+		else:
+			month_dict[birth_month] = 1
+	return int(sorted(month_dict, key = lambda x: month_dict[x], reverse = True)[0])
 
 def mySortPrint(a,col,fileName):
 #Similar to mySort, but instead of returning single
@@ -44,7 +79,15 @@ def mySortPrint(a,col,fileName):
 #Input: list of dictionaries, col (key) to sort by and output file name
 #Output: No return value, but the file is written
 
-	pass
+	OutFile = open(fileName, 'w')
+	sort_file = sorted(a, key = lambda x:x[col])
+	for x in sort_file:
+		first_name = str(x['First'])
+		last_name = str(x['Last'])
+		email_name = str(x['Email'])
+		OutFile.write('{},{},{}\n'.format(first_name, last_name, email_name))
+	OutFile.close()
+	return
 
 def findAge(a):
 # def findAge(a):
@@ -53,8 +96,10 @@ def findAge(a):
 # integer.  You will need to work with the DOB and the current date to find the current
 # age in years.
 
-	pass
-
+	ages = []
+	for dic in a:
+		ages.append(2018 - int(dic['DOB'].split('/')[-1].strip('\n')))
+	return round(sum(ages)/len(ages))
 
 ################################################################
 ## DO NOT MODIFY ANY CODE BELOW THIS
